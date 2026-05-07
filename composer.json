@@ -1,0 +1,20 @@
+{
+    "name": "disdukcapil/dukcapiltapin-web",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "bramus/router": "^1.6",
+        "twig/twig": "3.14"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "scripts": {
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "php -S localhost:8080 -t public_html"
+        ]
+    }
+}

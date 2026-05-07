@@ -1,0 +1,97 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+{% include "partials/header.twig" %}
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-body p-4">
+                    <h4 class="text-primary border-bottom pb-2 mb-4">
+                        <i class="bi bi-journal-text me-2"></i> {{ subtitle }}
+                    </h4>
+                    <div class="table-responsive rounded-3 border">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th scope="col" class="py-3 px-4 text-secondary fw-semibold border-bottom-0" style="width: 60px;">No.</th>
+                                    <th scope="col" class="py-3 px-3 text-secondary fw-semibold border-bottom-0">Nama Dokumen</th>
+                                    <th scope="col" class="py-3 px-4 text-secondary fw-semibold border-bottom-0 text-center" style="width: 140px;">Tindakan</th>
+                                </tr>
+                            </thead>
+                            <tbody class="border-top-0">
+                                {% for item in data %}
+                                    <tr style="transition: all 0.2s ease;">
+                                        <td class="px-4 py-3 text-muted fw-medium">{{ loop.index }}</td>
+                                        <td class="px-3 py-3">
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-danger bg-opacity-10 rounded-3 p-2 me-3 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                                                    <i class="bi bi-file-earmark-pdf-fill text-danger fs-5"></i>
+                                                </div>
+                                                <span class="fw-semibold text-dark fs-6">{{ item.title }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3 text-center">
+                                            <a href="https://files.dukcapil.tapinkab.go.id/{{ item.path }}" class="btn btn-sm btn-primary rounded-pill px-3 py-2 shadow-sm d-inline-flex align-items-center fw-medium" target="_blank" style="transition: transform 0.2s;">
+                                                <i class="bi bi-cloud-arrow-down-fill me-2"></i>Unduh
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="3" class="text-center py-5">
+                                            <div class="text-muted d-flex flex-column align-items-center justify-content-center py-4">
+                                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                                                    <i class="bi bi-inbox fs-2 text-secondary opacity-50"></i>
+                                                </div>
+                                                <span class="fw-medium text-dark">Belum ada dokumen</span>
+                                                <span class="small">Dokumen yang diterbitkan akan tampil di sini.</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="content-section bg-white rounded-4 p-4 mb-4">
+                <h5 class="fw-bold mb-4 border-start border-4 border-primary ps-3">Menu Layanan</h5>
+                <div class="card h-100 border-0 shadow-sm rounded-4 service-card mb-3">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="service-icon rounded-circle bg-success bg-opacity-10 p-3 me-3">
+                                <img src="/assets/img/ONLINE.png" alt="Pondok Dukcapil Icon" width="64" height="64">
+                            </div>
+                            <h5 class="card-title fw-bold mb-0">Pondok Dukcapil</h5>
+                        </div>
+                        <p class="card-text">Pelayanan online adminduk, penerbitan Kartu Keluarga, Akta Kelahiran, Pindah Datang dan lainnya.</p>
+                        <a href="https://pondok.dukcapil.tapinkab.go.id" class="btn btn-success rounded-pill px-4" target="_blank">
+                            <i class="bi bi-box-arrow-up-right me-2"></i>Registrasi
+                        </a>
+                    </div>
+                </div>
+                <div class="card h-100 border-0 shadow-sm rounded-4 service-card">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="service-icon rounded-circle bg-danger bg-opacity-10 p-3 me-3">
+                                <img src="/assets/img/IKD.png" alt="IKD Icon" width="64" height="64">
+                            </div>
+                            <h5 class="card-title fw-bold mb-0">Identitas Kependudukan Digital</h5>
+                        </div>
+                        <p class="card-text">Data kependudukan digital seperti KTP, Kartu Keluarga dan dokumen kependudukan lainnya.</p>
+                        <a href="/publikasi/identitas-kependudukan-digital" class="btn btn-danger rounded-pill px-4" target="_blank">
+                            <i class="bi bi-google-play me-2"></i>Unduh
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "partials/footer.twig" %}
+{% endblock %}

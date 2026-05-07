@@ -1,0 +1,56 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+{% include "partials/header.twig" %}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4 shadow-sm">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item">
+                <a href="#" class="text-decoration-none text-primary">{{ data.category|capitalize }}</a>
+            </li>
+            <li class="breadcrumb-item active fw-semibold" aria-current="page">{{ data.title }}</li>
+        </ol>
+    </nav>
+    <div class="row">
+        <div class="col-md-8">
+            {{ data.content|raw }}
+        </div>
+        <div class="col-md-4">
+            <div class="content-section bg-white rounded-4 p-4 mb-4">
+                <h5 class="fw-bold mb-4 border-start border-4 border-primary ps-3">Menu Layanan</h5>
+                <div class="card h-100 border-0 shadow-sm rounded-4 service-card mb-3">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="service-icon rounded-circle bg-success bg-opacity-10 p-3 me-3">
+                                <img src="/assets/img/ONLINE.png" alt="Pondok Dukcapil Icon" width="64" height="64">
+                            </div>
+                            <h5 class="card-title fw-bold mb-0">Pondok Dukcapil</h5>
+                        </div>
+                        <p class="card-text">Pelayanan online adminduk, penerbitan Kartu Keluarga, Akta Kelahiran, Pindah Datang dan lainnya.</p>
+                        <a href="https://pondok.dukcapil.tapinkab.go.id" class="btn btn-success rounded-pill px-4" target="_blank">
+                            <i class="bi bi-box-arrow-up-right me-2"></i>Registrasi
+                        </a>
+                    </div>
+                </div>
+                <div class="card h-100 border-0 shadow-sm rounded-4 service-card">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="service-icon rounded-circle bg-danger bg-opacity-10 p-3 me-3">
+                                <img src="/assets/img/IKD.png" alt="IKD Icon" width="64" height="64">
+                            </div>
+                            <h5 class="card-title fw-bold mb-0">Identitas Kependudukan Digital</h5>
+                        </div>
+                        <p class="card-text">Data kependudukan digital seperti KTP, Kartu Keluarga dan dokumen kependudukan lainnya.</p>
+                        <a href="/publikasi/identitas-kependudukan-digital" class="btn btn-danger rounded-pill px-4" target="_blank">
+                            <i class="bi bi-google-play me-2"></i>Unduh
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "partials/footer.twig" %}
+{% endblock %}

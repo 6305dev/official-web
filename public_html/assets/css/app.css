@@ -1,0 +1,321 @@
+@import url("https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css");
+
+* {
+  font-family: "Google Sans", sans-serif;
+  font-optical-sizing: auto;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #ffffff;
+}
+
+.btn-primary,
+.bg-primary {
+  background-color: #10b1ec !important;
+  border-color: #10b1ec !important;
+}
+
+.text-primary {
+  color: #10b1ec !important;
+}
+
+.text-danger {
+  color: #dd6666 !important;
+}
+
+.text-success {
+  color: #1cb187 !important;
+}
+
+.btn-danger,
+.bg-danger {
+  background-color: #dd6666 !important;
+  border-color: #dd6666 !important;
+}
+
+.btn-success,
+.bg-success {
+  background-color: #1cb187 !important;
+  border-color: #1cb187 !important;
+}
+
+.header {
+  padding: 0.5rem;
+  color: #fff;
+  background: rgb(38, 38, 38);
+  text-align: center;
+}
+
+.header-navbar {
+  color: #fff;
+  border-top: solid #333 1px;
+}
+
+.header-navbar .nav-link {
+  color: #fff !important;
+}
+
+.header-navbar .nav-link:hover {
+  color: #10b1ec !important;
+  transition: ease-in-out 0.2s;
+}
+
+.header-navbar .navbar-toggler {
+  color: #fff !important;
+}
+
+.header .dropdown-item:hover {
+  color: #10b1ec !important;
+  transition: ease-in-out 0.2s;
+}
+
+.header .dropdown-menu.show {
+  transition: ease-in-out 0.2s;
+}
+
+@media (min-width: 768px) {
+  .animate {
+    animation-duration: 0.3s;
+    -webkit-animation-duration: 0.3s;
+    animation-fill-mode: both;
+    -webkit-animation-fill-mode: both;
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateY(1rem);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0rem);
+    opacity: 1;
+  }
+
+  0% {
+    transform: translateY(1rem);
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes slideIn {
+  0% {
+    -webkit-transform: transform;
+    -webkit-opacity: 0;
+  }
+
+  100% {
+    -webkit-transform: translateY(0);
+    -webkit-opacity: 1;
+  }
+
+  0% {
+    -webkit-transform: translateY(1rem);
+    -webkit-opacity: 0;
+  }
+}
+
+.slideIn {
+  -webkit-animation-name: slideIn;
+  animation-name: slideIn;
+}
+
+.content {
+  padding: 2rem;
+}
+
+.faq .accordion-button {
+  font-size: 9pt !important;
+  color: #636363 !important;
+}
+
+.faq .accordion-body {
+  font-size: small !important;
+}
+
+.footer {
+  padding: 1rem;
+  font-size: small;
+  background-color: #f8f9ff;
+}
+
+.image-container {
+  position: relative;
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+}
+
+.overlay {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.328);
+  backdrop-filter: blur(3px);
+  padding-inline: 1rem;
+}
+
+.caption {
+  color: white;
+  padding: 0.5rem;
+  text-align: left;
+  font-size: small;
+}
+
+.smaller {
+  font-size: 8pt;
+}
+
+.box-content {
+  margin-block: 2rem;
+}
+
+.box-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.custom-accordion .accordion-button:not(.collapsed) {
+  background-color: #e7f1ff;
+  color: #0d6efd;
+  box-shadow: none;
+}
+
+.custom-accordion .accordion-button:focus {
+  box-shadow: none;
+  border-color: rgba(13, 110, 253, 0.25);
+}
+
+.custom-accordion .accordion-button:hover {
+  background-color: #e7f1ff;
+}
+
+.custom-accordion .accordion-item {
+  transition: all 0.3s ease;
+}
+
+.custom-accordion .accordion-item:hover {
+  transform: translateY(-2px);
+}
+
+.service-card {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.service-icon {
+  transition: transform 0.3s ease;
+}
+
+.service-card:hover .service-icon {
+  transform: scale(1.1);
+}
+
+.owl-carousel .item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  /* optional: untuk memastikan gambar mengisi area tanpa distorsi */
+}
+
+.accordion-button:not(.collapsed) {
+  color: var(--bs-primary);
+  background-color: var(--bs-white);
+  box-shadow: none;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+  border-color: rgba(var(--bs-primary-rgb), 0.2);
+}
+
+.hover-shadow {
+  transition: all 0.3s ease;
+}
+
+.hover-shadow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.accordion-button::after {
+  background-color: var(--bs-primary);
+  padding: 0.75rem;
+  background-position: center;
+  border-radius: 50%;
+  background-size: 10px;
+  opacity: 0.1;
+}
+
+.accordion-button:not(.collapsed)::after {
+  background-color: var(--bs-primary);
+  opacity: 0.2;
+}
+
+.list-group-item {
+  transition: all 0.3s ease;
+}
+
+.list-group-item:hover {
+  background-color: var(--bs-light);
+}
+
+.btn-outline-primary {
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+  transform: translateY(-2px);
+}
+
+.footer-section {
+  height: 100%;
+}
+
+.footer-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.hover-lift {
+  transition: transform 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-3px);
+}
+
+.social-links a:hover,
+.contact-links a:hover {
+  opacity: 0.8;
+}
+
+.schedule-card {
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.h-400px {
+  height: 400px;
+}

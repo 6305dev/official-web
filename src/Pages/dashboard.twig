@@ -1,0 +1,947 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    
+    .sidebar {
+        width: 280px;
+        min-height: 100vh;
+        z-index: 100;
+    }
+    
+    .nav-pills .nav-link {
+        color: #6c757d;
+        transition: all 0.2s ease-in-out;
+    }
+    
+    .nav-pills .nav-link:hover {
+        background-color: rgba(13, 110, 253, 0.05);
+        color: #0d6efd;
+    }
+    
+    .nav-pills .nav-link.active {
+        background-color: rgba(13, 110, 253, 0.1) !important;
+        color: #0d6efd !important;
+        font-weight: 600;
+    }
+    
+    .form-control:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+        border-color: #86b7fe;
+    }
+    
+    .table > :not(caption) > * > * {
+        padding: 1rem 1rem;
+    }
+    
+    .btn {
+        transition: all 0.2s;
+    }
+    
+    .btn:hover {
+        transform: translateY(-1px);
+    }
+    
+    .card {
+        transition: box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+        box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.08) !important;
+    }
+    
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #c1c1c1; 
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8; 
+    }
+</style>
+
+<div class="d-flex" style="min-height: 100vh;">
+    <!-- Sidebar (Desktop) -->
+    <div class="bg-white border-end shadow-sm d-none d-lg-flex flex-column sidebar position-sticky top-0 h-100">
+        <div class="p-4 d-flex align-items-center border-bottom">
+            <i class="bi bi-shield-lock-fill text-primary fs-3 me-2"></i>
+            <span class="fs-5 fw-bold text-dark tracking-tight">Admin Panel</span>
+        </div>
+        <div class="p-3 flex-grow-1 overflow-auto">
+            <ul class="nav nav-pills flex-column gap-2" id="dashboardTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active w-100 text-start rounded-3 px-4 py-3 d-flex align-items-center" id="tab-artikel"
+                        data-bs-toggle="pill" data-bs-target="#panel-artikel" type="button" role="tab"
+                        aria-controls="panel-artikel" aria-selected="true">
+                        <i class="bi bi-newspaper me-3 fs-5"></i> Posting Artikel
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link w-100 text-start rounded-3 px-4 py-3 d-flex align-items-center" id="tab-slider"
+                        data-bs-toggle="pill" data-bs-target="#panel-slider" type="button" role="tab"
+                        aria-controls="panel-slider" aria-selected="false">
+                        <i class="bi bi-images me-3 fs-5"></i> Ganti Slider
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link w-100 text-start rounded-3 px-4 py-3 d-flex align-items-center" id="tab-dokumen"
+                        data-bs-toggle="pill" data-bs-target="#panel-dokumen" type="button" role="tab"
+                        aria-controls="panel-dokumen" aria-selected="false">
+                        <i class="bi bi-file-earmark-pdf me-3 fs-5"></i> Kelola Dokumen
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="p-4 border-top">
+            <button class="btn btn-light text-danger w-100 rounded-3 d-flex align-items-center justify-content-center py-2 fw-medium shadow-sm" onclick="logout()">
+                <i class="bi bi-box-arrow-right me-2 fs-5"></i> Keluar
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Offcanvas Sidebar -->
+    <div class="offcanvas offcanvas-start border-0 shadow" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
+        <div class="offcanvas-header border-bottom p-4">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-shield-lock-fill text-primary fs-3 me-2"></i>
+                <h5 class="offcanvas-title fw-bold" id="mobileSidebarLabel">Admin Panel</h5>
+            </div>
+            <button type="button" class="btn-close text-reset shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column p-0">
+            <div class="p-3 flex-grow-1">
+                <ul class="nav nav-pills flex-column gap-2" id="dashboardTabsMobile" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active w-100 text-start rounded-3 px-4 py-3 d-flex align-items-center" id="tab-artikel-mobile"
+                            data-bs-toggle="pill" data-bs-target="#panel-artikel" type="button" role="tab"
+                            aria-controls="panel-artikel" aria-selected="true" data-bs-dismiss="offcanvas"
+                            onclick="document.getElementById('tab-artikel').click()">
+                            <i class="bi bi-newspaper me-3 fs-5"></i> Posting Artikel
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link w-100 text-start rounded-3 px-4 py-3 d-flex align-items-center" id="tab-slider-mobile"
+                            data-bs-toggle="pill" data-bs-target="#panel-slider" type="button" role="tab"
+                            aria-controls="panel-slider" aria-selected="false" data-bs-dismiss="offcanvas"
+                            onclick="document.getElementById('tab-slider').click()">
+                            <i class="bi bi-images me-3 fs-5"></i> Ganti Slider
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link w-100 text-start rounded-3 px-4 py-3 d-flex align-items-center" id="tab-dokumen-mobile"
+                            data-bs-toggle="pill" data-bs-target="#panel-dokumen" type="button" role="tab"
+                            aria-controls="panel-dokumen" aria-selected="false" data-bs-dismiss="offcanvas"
+                            onclick="document.getElementById('tab-dokumen').click()">
+                            <i class="bi bi-file-earmark-pdf me-3 fs-5"></i> Kelola Dokumen
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="p-4 border-top">
+                <button class="btn btn-light text-danger w-100 rounded-3 d-flex align-items-center justify-content-center py-2 fw-medium shadow-sm" onclick="logout()">
+                    <i class="bi bi-box-arrow-right me-2 fs-5"></i> Keluar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-grow-1 d-flex flex-column overflow-hidden w-100">
+        <!-- Top Navbar -->
+        <nav class="navbar navbar-light bg-white border-bottom shadow-sm px-4 py-3 sticky-top">
+            <div class="container-fluid px-0">
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-light rounded-3 d-lg-none me-3 shadow-sm border" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
+                        <i class="bi bi-list fs-5"></i>
+                    </button>
+                    <h4 class="mb-0 fw-bold text-dark d-none d-sm-block tracking-tight">Dashboard</h4>
+                    <h5 class="mb-0 fw-bold text-dark d-sm-none">Panel</h5>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center bg-light rounded-pill px-3 py-2 border">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex justify-content-center align-items-center me-2" style="width: 32px; height: 32px;">
+                            <i class="bi bi-person-fill fs-6"></i>
+                        </div>
+                        <span class="fw-semibold text-dark small pe-1">Administrator</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Tab Content -->
+        <div class="p-3 p-md-4 p-xl-5 overflow-auto flex-grow-1">
+            <div class="tab-content" id="dashboardTabContent">
+                
+                <!-- ===================== TAB 1: POSTING ARTIKEL ===================== -->
+                <div class="tab-pane fade show active" id="panel-artikel" role="tabpanel" aria-labelledby="tab-artikel">
+                    <div class="mb-4 mb-md-5">
+                        <h3 class="fw-bold text-dark mb-2 tracking-tight">Manajemen Konten</h3>
+                        <p class="text-secondary mb-0">Kelola artikel, berita, dan halaman publikasi website.</p>
+                    </div>
+
+                    <div class="row g-4 g-xl-5">
+                        <!-- Form Section -->
+                        <div class="col-xl-4 col-lg-5 order-2 order-lg-1">
+                            <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden" style="border-top: 4px solid #0d6efd !important;">
+                                <div class="card-body p-4 p-xl-4">
+                                    <h5 class="fw-bold text-dark mb-4 d-flex align-items-center">
+                                        <div class="bg-primary bg-opacity-10 text-primary p-2 rounded-3 me-3 d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-pencil-square fs-5"></i>
+                                        </div>
+                                        Tulis Artikel
+                                    </h5>
+                                    
+                                    <form id="create-article-form">
+                                        <input type="hidden" id="article-id" name="id">
+
+                                        <div class="mb-3">
+                                            <label for="title" class="form-label fw-semibold text-dark small mb-2">Judul Artikel</label>
+                                            <input type="text" class="form-control form-control-lg fs-6 bg-light border-0 shadow-none px-3 py-2" id="title"
+                                                name="title" placeholder="Masukkan judul menarik..." required style="border-radius: 0.5rem;">
+                                        </div>
+
+                                        <div class="row g-3 mb-3">
+                                            <div class="col-sm-6">
+                                                <label for="created" class="form-label fw-semibold text-dark small mb-2">Waktu Publikasi</label>
+                                                <input type="datetime-local" class="form-control bg-light border-0 shadow-none px-3 py-2" id="created"
+                                                    name="created" style="border-radius: 0.5rem;">
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label for="permalink"
+                                                    class="form-label fw-semibold text-dark small mb-2">Tautan Permanen</label>
+                                                <input type="text" class="form-control bg-light border-0 shadow-none px-3 py-2" id="permalink"
+                                                    name="permalink" placeholder="contoh-judul" required style="border-radius: 0.5rem;">
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="file" class="form-label fw-semibold text-dark small mb-2">Gambar Sampul</label>
+                                            <input type="file" class="form-control bg-light border-0 shadow-none px-3 py-2" id="file" name="file" style="border-radius: 0.5rem;">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold text-dark small mb-2">Pratinjau Gambar</label>
+                                            <input type="hidden" class="form-control" id="image" name="image">
+                                            <div class="rounded-4 overflow-hidden bg-light d-flex justify-content-center align-items-center position-relative shadow-sm"
+                                                style="min-height: 180px; border: 2px dashed #dee2e6;">
+                                                <div id="preview-placeholder" class="text-secondary d-flex flex-column align-items-center">
+                                                    <i class="bi bi-image fs-1 mb-2 opacity-50"></i>
+                                                    <span class="small fw-medium">Belum ada gambar</span>
+                                                </div>
+                                                <img id="file-preview" src="#" alt="Preview" class="img-fluid w-100 h-100 position-absolute top-0 start-0"
+                                                    style="object-fit: cover; display: none;">
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="content" class="form-label fw-semibold text-dark small mb-2">Isi Artikel</label>
+                                            <textarea class="form-control bg-light border-0 shadow-none px-3 py-3" id="content" name="content" rows="6"
+                                                placeholder="Tuliskan isi artikel lengkap di sini..." style="border-radius: 0.5rem; resize: vertical; min-height: 120px;"></textarea>
+                                        </div>
+
+                                        <div class="d-grid mt-4">
+                                            <button type="submit" class="btn btn-primary btn-lg rounded-3 fs-6 fw-bold shadow-sm d-flex justify-content-center align-items-center py-3">
+                                                <i class="bi bi-send-fill me-2 fs-5"></i> Publikasikan Artikel
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Table Section -->
+                        <div class="col-xl-8 col-lg-7 order-1 order-lg-2">
+                            <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden d-flex flex-column">
+                                <div
+                                    class="card-header bg-white border-bottom pt-4 pb-3 px-4 px-xl-5 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
+                                    <h5 class="fw-bold text-dark mb-0 d-flex align-items-center">
+                                        <div class="bg-info bg-opacity-10 text-info p-2 rounded-3 me-3 d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-list-columns-reverse fs-5"></i>
+                                        </div>
+                                        Daftar Artikel
+                                    </h5>
+                                    <div class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 fw-semibold fs-6 border border-primary border-opacity-10 shadow-sm">
+                                        <i class="bi bi-journal-text me-1"></i> {{ data|length }} Total
+                                    </div>
+                                </div>
+                                <div class="card-body p-0 flex-grow-1 overflow-auto">
+                                    <div class="table-responsive h-100">
+                                        <table class="table table-hover align-middle mb-0">
+                                            <thead class="table-light sticky-top" style="z-index: 1;">
+                                                <tr>
+                                                    <th scope="col" class="border-0 text-secondary fw-semibold py-3 px-4 px-xl-5 text-nowrap">Tanggal</th>
+                                                    <th scope="col" class="border-0 text-secondary fw-semibold py-3">Judul Artikel</th>
+                                                    <th scope="col" class="border-0 text-secondary fw-semibold py-3 text-end px-4 px-xl-5">Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="border-top-0">
+                                                {% for value in data %}
+                                                <tr class="article-row" data-id="{{ value.id }}" style="cursor: default;">
+                                                    <td class="px-4 px-xl-5 text-nowrap">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="bg-light rounded-3 p-2 me-3 text-secondary d-flex align-items-center justify-content-center">
+                                                                <i class="bi bi-calendar-event"></i>
+                                                            </div>
+                                                            <span class="text-secondary small fw-medium">{{ value.created|tgl_indo }}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span class="fw-semibold text-dark">{{ value.title }}</span>
+                                                    </td>
+                                                    <td class="text-end px-4 px-xl-5">
+                                                        <div class="d-flex justify-content-end gap-2">
+                                                            <a href="{{ value.permalink }}" class="btn btn-light text-primary btn-sm rounded-circle d-flex align-items-center justify-content-center border-0 shadow-sm" style="width: 36px; height: 36px;" target="_blank" title="Lihat Artikel">
+                                                                <i class="bi bi-eye-fill"></i>
+                                                            </a>
+                                                            <button type="button" class="btn btn-light text-success btn-sm rounded-circle d-flex align-items-center justify-content-center border-0 shadow-sm" style="width: 36px; height: 36px;" title="Edit Artikel" data-action="edit">
+                                                                <i class="bi bi-pencil-fill"></i>
+                                                            </button>
+                                                            <button type="button" class="btn btn-light text-danger btn-sm rounded-circle d-flex align-items-center justify-content-center border-0 shadow-sm" style="width: 36px; height: 36px;" title="Hapus Artikel" data-action="delete">
+                                                                <i class="bi bi-trash3-fill"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% else %}
+                                                <tr>
+                                                    <td colspan="3" class="text-center py-5">
+                                                        <div class="d-flex flex-column align-items-center justify-content-center py-5">
+                                                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                                                <i class="bi bi-inbox fs-1 text-secondary opacity-50"></i>
+                                                            </div>
+                                                            <h5 class="fw-bold text-dark">Belum ada artikel</h5>
+                                                            <p class="text-muted small">Artikel yang Anda publikasikan akan muncul di sini.</p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===================== TAB 2: GANTI SLIDER ===================== -->
+                <div class="tab-pane fade" id="panel-slider" role="tabpanel" aria-labelledby="tab-slider">
+                    <div class="mb-4 mb-md-5">
+                        <h3 class="fw-bold text-dark mb-2 tracking-tight">Manajemen Slider</h3>
+                        <p class="text-secondary mb-0">Sesuaikan gambar *carousel* atau *slider* yang ditampilkan pada halaman utama website.</p>
+                    </div>
+
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th scope="col" class="border-0 text-secondary fw-semibold py-4 px-4 px-xl-5 w-25">Nomor Slide</th>
+                                            <th scope="col" class="border-0 text-secondary fw-semibold py-4 w-50">Pratinjau Gambar</th>
+                                            <th scope="col" class="border-0 text-secondary fw-semibold py-4 text-end px-4 px-xl-5 w-25">Aksi & Upload</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="border-top-0">
+                                        {% for i in 1..4 %}
+                                        <tr>
+                                            <td class="px-4 px-xl-5 py-4">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm me-3 fs-5" style="width: 48px; height: 48px;">
+                                                        {{ i }}
+                                                    </div>
+                                                    <div>
+                                                        <span class="fw-bold text-dark fs-5 d-block">Slot {{ i }}</span>
+                                                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1 small fw-medium mt-1">Aktif</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-4">
+                                                <div class="rounded-4 overflow-hidden bg-light shadow-sm position-relative d-inline-block" style="border: 2px dashed #dee2e6; max-width: 320px; width: 100%;">
+                                                    <img id="slider-preview-{{ i }}" src="/assets/img/slide{{ i }}.jpg" alt="Slide {{ i }}"
+                                                        class="w-100" style="aspect-ratio: 16/7; object-fit: cover; display: block;">
+                                                </div>
+                                            </td>
+                                            <td class="text-end px-4 px-xl-5 py-4">
+                                                <div class="d-flex flex-column gap-3 align-items-end justify-content-center">
+                                                    <div class="position-relative w-100" style="max-width: 250px;">
+                                                        <input type="file" id="slider-file-{{ i }}" accept="image/*" class="form-control bg-light border shadow-sm rounded-3 w-100 py-2 px-3 small text-secondary" style="font-size: 0.85rem;">
+                                                    </div>
+                                                    <button type="button" class="btn btn-primary shadow-sm rounded-3 px-4 py-2 fw-semibold w-100 d-flex justify-content-center align-items-center transition-all" style="max-width: 250px;"
+                                                        onclick="uploadSlider('{{ i }}')" id="slider-btn-{{ i }}">
+                                                        <i class="bi bi-cloud-arrow-up-fill me-2 fs-5"></i> Simpan Gambar
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ===================== TAB 3: KELOLA DOKUMEN ===================== -->
+                <div class="tab-pane fade" id="panel-dokumen" role="tabpanel" aria-labelledby="tab-dokumen">
+                    <div class="mb-4 mb-md-5">
+                        <h3 class="fw-bold text-dark mb-2 tracking-tight">Manajemen Dokumen</h3>
+                        <p class="text-secondary mb-0">Kelola dan unggah file dokumen seperti Laporan PPID, SKM, dan Pengaduan.</p>
+                    </div>
+
+                    <div class="row g-4 g-xl-5">
+                        <!-- Form Section -->
+                        <div class="col-xl-4 col-lg-5 order-2 order-lg-1">
+                            <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden" style="border-top: 4px solid #198754 !important;">
+                                <div class="card-body p-4 p-xl-4">
+                                    <h5 class="fw-bold text-dark mb-4 d-flex align-items-center">
+                                        <div class="bg-success bg-opacity-10 text-success p-2 rounded-3 me-3 d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-cloud-arrow-up fs-5"></i>
+                                        </div>
+                                        Unggah Dokumen
+                                    </h5>
+                                    
+                                    <form id="create-document-form">
+                                        <div class="mb-3">
+                                            <label for="doc-title" class="form-label fw-semibold text-dark small mb-2">Nama Dokumen</label>
+                                            <input type="text" class="form-control form-control-lg fs-6 bg-light border-0 shadow-none px-3 py-2" id="doc-title"
+                                                name="title" placeholder="Contoh: Laporan PPID 2024" required style="border-radius: 0.5rem;">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="doc-category" class="form-label fw-semibold text-dark small mb-2">Kategori Dokumen</label>
+                                            <select class="form-select bg-light border-0 shadow-none px-3 py-2" id="doc-category" name="category" required style="border-radius: 0.5rem;">
+                                                <option value="" disabled selected>Pilih Kategori...</option>
+                                                <option value="LAPORAN">Laporan PPID</option>
+                                                <option value="SKM">Laporan Hasil SKM</option>
+                                                <option value="PENGADUAN">Laporan Pengaduan</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="doc-file" class="form-label fw-semibold text-dark small mb-2">Pilih File (PDF)</label>
+                                            <input type="file" accept=".pdf" class="form-control bg-light border-0 shadow-none px-3 py-2" id="doc-file" name="file" required style="border-radius: 0.5rem;">
+                                            <input type="hidden" id="doc-path" name="path">
+                                        </div>
+
+                                        <div class="d-grid mt-4">
+                                            <button type="submit" class="btn btn-success btn-lg rounded-3 fs-6 fw-bold shadow-sm d-flex justify-content-center align-items-center py-3">
+                                                <i class="bi bi-cloud-check-fill me-2 fs-5"></i> Simpan Dokumen
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Table Section -->
+                        <div class="col-xl-8 col-lg-7 order-1 order-lg-2">
+                            <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden d-flex flex-column">
+                                <div class="card-header bg-white border-bottom pt-4 pb-3 px-4 px-xl-5 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
+                                    <h5 class="fw-bold text-dark mb-0 d-flex align-items-center">
+                                        <div class="bg-success bg-opacity-10 text-success p-2 rounded-3 me-3 d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-file-earmark-text fs-5"></i>
+                                        </div>
+                                        Daftar Dokumen
+                                    </h5>
+                                    <div class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 fw-semibold fs-6 border border-success border-opacity-10 shadow-sm">
+                                        <i class="bi bi-files me-1"></i> {{ documents|length }} Total
+                                    </div>
+                                </div>
+                                <div class="card-body p-0 flex-grow-1 overflow-auto">
+                                    <div class="table-responsive h-100">
+                                        <table class="table table-hover align-middle mb-0">
+                                            <thead class="table-light sticky-top" style="z-index: 1;">
+                                                <tr>
+                                                    <th scope="col" class="border-0 text-secondary fw-semibold py-3 px-4 px-xl-5 text-nowrap">Kategori</th>
+                                                    <th scope="col" class="border-0 text-secondary fw-semibold py-3">Nama Dokumen</th>
+                                                    <th scope="col" class="border-0 text-secondary fw-semibold py-3 text-end px-4 px-xl-5">Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="border-top-0">
+                                                {% for doc in documents %}
+                                                <tr class="document-row" data-id="{{ doc.id }}">
+                                                    <td class="px-4 px-xl-5 text-nowrap">
+                                                        <span class="badge bg-light text-dark border">{{ doc.category }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="bi bi-file-pdf text-danger fs-4 me-2"></i>
+                                                            <span class="fw-semibold text-dark">{{ doc.title }}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-end px-4 px-xl-5">
+                                                        <div class="d-flex justify-content-end gap-2">
+                                                            <a href="/share_files/{{ doc.path }}" class="btn btn-light text-primary btn-sm rounded-circle d-flex align-items-center justify-content-center border-0 shadow-sm" style="width: 36px; height: 36px;" target="_blank" title="Unduh">
+                                                                <i class="bi bi-download"></i>
+                                                            </a>
+                                                            <button type="button" class="btn btn-light text-danger btn-sm rounded-circle d-flex align-items-center justify-content-center border-0 shadow-sm" style="width: 36px; height: 36px;" title="Hapus Dokumen" data-action="delete-doc">
+                                                                <i class="bi bi-trash3-fill"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% else %}
+                                                <tr>
+                                                    <td colspan="3" class="text-center py-5">
+                                                        <div class="d-flex flex-column align-items-center justify-content-center py-5">
+                                                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                                                <i class="bi bi-folder2-open fs-1 text-secondary opacity-50"></i>
+                                                            </div>
+                                                            <h5 class="fw-bold text-dark">Belum ada dokumen</h5>
+                                                            <p class="text-muted small">Dokumen yang Anda unggah akan muncul di sini.</p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Synchronize mobile and desktop tabs
+    document.querySelectorAll('[data-bs-toggle="pill"]').forEach(tab => {
+        tab.addEventListener('shown.bs.tab', function (event) {
+            const targetId = event.target.getAttribute('data-bs-target');
+            // Find all tabs pointing to this target and activate them
+            document.querySelectorAll(`[data-bs-target="${targetId}"]`).forEach(t => {
+                if (t !== event.target) {
+                    const bsTab = new bootstrap.Tab(t);
+                    bsTab.show();
+                }
+            });
+        });
+    });
+
+    // ===================== ARTIKEL SCRIPTS =====================
+    const fileInput = document.getElementById('file');
+    const filePreview = document.getElementById('file-preview');
+
+    fileInput.addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                filePreview.src = e.target.result;
+                filePreview.style.display = 'block';
+                const placeholder = document.getElementById('preview-placeholder');
+                if (placeholder) placeholder.style.display = 'none';
+            }
+            reader.readAsDataURL(file);
+        } else {
+            filePreview.src = '#';
+            filePreview.style.display = 'none';
+            const placeholder = document.getElementById('preview-placeholder');
+            if (placeholder) placeholder.style.display = 'flex';
+        }
+    });
+
+    function uploadFile(file) {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            const formData = new FormData();
+            formData.append('file', file);
+            xhr.open('POST', '/upload', true);
+            xhr.upload.onprogress = function (e) {
+                if (e.lengthComputable) {
+                    const percentComplete = (e.loaded / e.total) * 100;
+                    console.log(`Upload progress: ${percentComplete.toFixed(2)}%`);
+                }
+            };
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        resolve(response);
+                    } catch (err) {
+                        reject(err);
+                    }
+                } else {
+                    reject(new Error('Upload failed'));
+                }
+            };
+            xhr.onerror = function () {
+                reject(new Error('Network error'));
+            };
+            xhr.send(formData);
+        });
+    }
+
+    fileInput.addEventListener('change', async function (e) {
+        const file = e.target.files[0];
+        if (file) {
+            try {
+                const uploadResponse = await uploadFile(file);
+                if (uploadResponse.fileUrl) {
+                    filePreview.src = uploadResponse.fileUrl;
+                    filePreview.style.display = 'block';
+                    const placeholder = document.getElementById('preview-placeholder');
+                    if (placeholder) placeholder.style.display = 'none';
+                    document.getElementById('image').value = uploadResponse.fileName;
+                }
+            } catch (err) {
+                console.error('Upload error:', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Gagal mengupload gambar!',
+                    confirmButtonColor: '#0d6efd'
+                });
+            }
+        }
+    });
+
+    function setEditingState(isEditing) {
+        const submitButton = document.querySelector('#create-article-form button[type="submit"]');
+        if(isEditing) {
+            submitButton.innerHTML = '<i class="bi bi-save-fill me-2 fs-5"></i> Simpan Perubahan';
+            submitButton.classList.remove('btn-primary');
+            submitButton.classList.add('btn-success');
+        } else {
+            submitButton.innerHTML = '<i class="bi bi-send-fill me-2 fs-5"></i> Publikasikan Artikel';
+            submitButton.classList.remove('btn-success');
+            submitButton.classList.add('btn-primary');
+        }
+    }
+
+    function fillFormWithArticle(article) {
+        document.getElementById('article-id').value = article.id ?? '';
+        document.getElementById('title').value = article.title ?? '';
+        document.getElementById('created').value = article.created ?? '';
+        document.getElementById('permalink').value = article.permalink ?? '';
+        document.getElementById('image').value = article.cover ?? '';
+        document.getElementById('content').value = article.content ?? '';
+        if (article.cover) {
+            filePreview.src = '/share_files/' + article.cover;
+            filePreview.style.display = 'block';
+            const placeholder = document.getElementById('preview-placeholder');
+            if (placeholder) placeholder.style.display = 'none';
+        }
+        setEditingState(true);
+        // Scroll to form
+        document.getElementById('create-article-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    document.getElementById('create-article-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+        delete data.file;
+        const endpoint = data.id ? '/update-article' : '/create-article';
+        
+        const btn = this.querySelector('button[type="submit"]');
+        const originalBtnHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Menyimpan...';
+
+        fetch(endpoint, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: data.message,
+                        confirmButtonColor: '#0d6efd',
+                        timer: 1500
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    throw new Error(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: error.message || 'Terjadi kesalahan. Silakan coba lagi.',
+                    confirmButtonColor: '#0d6efd'
+                });
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalBtnHtml;
+            });
+    });
+
+    document.querySelectorAll('.article-row').forEach(row => {
+        row.addEventListener('click', function (e) {
+            const deleteButton = e.target.closest('[data-action="delete"]');
+            if (deleteButton) {
+                e.stopPropagation();
+                const articleId = this.dataset.id;
+                
+                Swal.fire({
+                    title: 'Hapus Artikel?',
+                    text: "Artikel yang dihapus tidak dapat dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/delete-article/${articleId}`, { method: 'DELETE' })
+                            .then(response => response.json())
+                            .then(data => {
+                                if(data.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Terhapus!',
+                                        text: data.message,
+                                        timer: 1500,
+                                        showConfirmButton: false
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    throw new Error(data.message);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                Swal.fire('Gagal!', error.message || 'Terjadi kesalahan.', 'error');
+                            });
+                    }
+                });
+                return;
+            }
+            const editButton = e.target.closest('[data-action="edit"]');
+            if (editButton) {
+                const articleId = this.dataset.id;
+                fetch(`/article/${articleId}`, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                })
+                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.success) {
+                            throw new Error(response.message || 'Failed to load article');
+                        }
+                        fillFormWithArticle(response.data);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire('Gagal!', 'Gagal memuat data artikel.', 'error');
+                    });
+            }
+        });
+    });
+
+    // ===================== DOKUMEN SCRIPTS =====================
+    const docFileInput = document.getElementById('doc-file');
+    
+    document.getElementById('create-document-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        
+        const file = docFileInput.files[0];
+        if (!file) {
+            Swal.fire('Perhatian', 'Pilih file dokumen terlebih dahulu!', 'warning');
+            return;
+        }
+
+        const btn = this.querySelector('button[type="submit"]');
+        const originalBtnHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Mengunggah...';
+
+        try {
+            // 1. Upload File
+            const uploadResponse = await uploadFile(file);
+            if (!uploadResponse.fileUrl) throw new Error('Gagal mengupload file dokumen');
+            
+            // 2. Save Document Record
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            data.path = uploadResponse.fileName; // The saved filename
+            delete data.file;
+            
+            const response = await fetch('/create-document', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const result = await response.json();
+            
+            if (result.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: result.message,
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(() => location.reload());
+            } else {
+                throw new Error(result.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire('Gagal!', error.message || 'Terjadi kesalahan.', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHtml;
+        }
+    });
+
+    document.querySelectorAll('.document-row').forEach(row => {
+        row.addEventListener('click', function (e) {
+            const deleteButton = e.target.closest('[data-action="delete-doc"]');
+            if (deleteButton) {
+                e.stopPropagation();
+                const docId = this.dataset.id;
+                
+                Swal.fire({
+                    title: 'Hapus Dokumen?',
+                    text: "Dokumen yang dihapus tidak dapat dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/delete-document/${docId}`, { method: 'DELETE' })
+                            .then(response => response.json())
+                            .then(data => {
+                                if(data.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Terhapus!',
+                                        text: data.message,
+                                        timer: 1500,
+                                        showConfirmButton: false
+                                    }).then(() => location.reload());
+                                } else {
+                                    throw new Error(data.message);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                Swal.fire('Gagal!', error.message || 'Terjadi kesalahan.', 'error');
+                            });
+                    }
+                });
+            }
+        });
+    });
+
+    // ===================== SLIDER SCRIPTS =====================
+
+    // Preview slider image on file select
+    for (let i = 1; i <= 4; i++) {
+        const input = document.getElementById('slider-file-' + i);
+        if (input) {
+            input.addEventListener('change', function (e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (ev) {
+                        document.getElementById('slider-preview-' + i).src = ev.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    }
+
+    function uploadSlider(slot) {
+        const fileInput = document.getElementById('slider-file-' + slot);
+        const btn = document.getElementById('slider-btn-' + slot);
+        const file = fileInput.files[0];
+
+        if (!file) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Perhatian',
+                text: 'Pilih file gambar terlebih dahulu.',
+                confirmButtonColor: '#0d6efd'
+            });
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('slot', slot);
+
+        btn.disabled = true;
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Mengunggah...';
+
+        fetch('/update-slider', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('slider-preview-' + slot).src = data.url;
+                    fileInput.value = '';
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: data.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire('Gagal!', data.message || 'Gagal mengupload slider.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('Gagal!', 'Terjadi kesalahan jaringan.', 'error');
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            });
+    }
+
+    // ===================== GLOBAL =====================
+    function logout() {
+        Swal.fire({
+            title: 'Keluar?',
+            text: "Anda akan keluar dari halaman admin.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Keluar',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "/logout";
+            }
+        });
+    }
+</script>
+{% endblock %}
