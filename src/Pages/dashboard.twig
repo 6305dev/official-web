@@ -702,9 +702,11 @@
                                                 id="doc-category" name="category" required
                                                 style="border-radius: 0.5rem;">
                                                 <option value="" disabled selected>Pilih Kategori...</option>
-                                                <option value="LAPORAN">Laporan PPID</option>
-                                                <option value="SKM">Laporan Hasil SKM</option>
-                                                <option value="PENGADUAN">Laporan Pengaduan</option>
+                                                <option value="UMUM">Umum</option>
+                                                <option value="SKM">SKM</option>
+                                                <option value="SOP">SOP</option>
+                                                <option value="PENGADUAN">Pengaduan</option>
+                                                <option value="UU">Undang-undang</option>
                                             </select>
                                         </div>
 
@@ -749,17 +751,35 @@
                                 <!-- Category Filter Tabs -->
                                 <div class="px-4 px-xl-5 py-3 bg-white border-bottom">
                                     <div class="d-flex flex-wrap gap-2" id="doc-category-filters" role="tablist">
-                                        <button type="button" class="btn btn-sm rounded-pill fw-semibold px-3 py-1 doc-filter-btn active" data-filter="ALL">
+                                        <button type="button"
+                                            class="btn btn-sm rounded-pill fw-semibold px-3 py-1 doc-filter-btn active"
+                                            data-filter="ALL">
                                             <i class="bi bi-grid-3x3-gap me-1"></i> Semua
                                         </button>
-                                        <button type="button" class="btn btn-sm rounded-pill fw-semibold px-3 py-1 doc-filter-btn" data-filter="LAPORAN">
-                                            <i class="bi bi-journal-text me-1"></i> Laporan PPID
+                                        <button type="button"
+                                            class="btn btn-sm rounded-pill fw-semibold px-3 py-1 doc-filter-btn"
+                                            data-filter="UMUM">
+                                            <i class="bi bi-journal-text me-1"></i> Laporan Umum
                                         </button>
-                                        <button type="button" class="btn btn-sm rounded-pill fw-semibold px-3 py-1 doc-filter-btn" data-filter="SKM">
+                                        <button type="button"
+                                            class="btn btn-sm rounded-pill fw-semibold px-3 py-1 doc-filter-btn"
+                                            data-filter="SKM">
                                             <i class="bi bi-bar-chart-line me-1"></i> Laporan SKM
                                         </button>
-                                        <button type="button" class="btn btn-sm rounded-pill fw-semibold px-3 py-1 doc-filter-btn" data-filter="PENGADUAN">
+                                        <button type="button"
+                                            class="btn btn-sm rounded-pill fw-semibold px-3 py-1 doc-filter-btn"
+                                            data-filter="PENGADUAN">
                                             <i class="bi bi-megaphone me-1"></i> Laporan Pengaduan
+                                        </button>
+                                        <button type="button"
+                                            class="btn btn-sm rounded-pill fw-semibold px-3 py-1 doc-filter-btn"
+                                            data-filter="UU">
+                                            <i class="bi bi-file-earmark-text me-1"></i> Undang-Undang
+                                        </button>
+                                        <button type="button"
+                                            class="btn btn-sm rounded-pill fw-semibold px-3 py-1 doc-filter-btn"
+                                            data-filter="SOP">
+                                            <i class="bi bi-file-earmark-text me-1"></i> SOP
                                         </button>
                                     </div>
                                 </div>
@@ -780,7 +800,8 @@
                                             </thead>
                                             <tbody class="border-top-0">
                                                 {% for doc in documents %}
-                                                <tr class="document-row" data-id="{{ doc.id }}" data-category="{{ doc.category }}">
+                                                <tr class="document-row" data-id="{{ doc.id }}"
+                                                    data-category="{{ doc.category }}">
                                                     <td class="px-4 px-xl-5 text-nowrap">
                                                         <span class="badge bg-light text-dark border">{{ doc.category
                                                             }}</span>
@@ -789,19 +810,24 @@
                                                         <div class="d-flex align-items-center">
                                                             {% set ext = doc.path|split('.')|last|lower %}
                                                             {% if ext == 'pdf' %}
-                                                                <i class="bi bi-file-earmark-pdf text-danger fs-4 me-2"></i>
-                                                            {% elseif ext in ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'] %}
-                                                                <i class="bi bi-file-earmark-image text-info fs-4 me-2"></i>
+                                                            <i class="bi bi-file-earmark-pdf text-danger fs-4 me-2"></i>
+                                                            {% elseif ext in ['jpg', 'jpeg', 'png', 'gif', 'webp',
+                                                            'svg'] %}
+                                                            <i class="bi bi-file-earmark-image text-info fs-4 me-2"></i>
                                                             {% elseif ext in ['doc', 'docx'] %}
-                                                                <i class="bi bi-file-earmark-word text-primary fs-4 me-2"></i>
+                                                            <i
+                                                                class="bi bi-file-earmark-word text-primary fs-4 me-2"></i>
                                                             {% elseif ext in ['xls', 'xlsx'] %}
-                                                                <i class="bi bi-file-earmark-excel text-success fs-4 me-2"></i>
+                                                            <i
+                                                                class="bi bi-file-earmark-excel text-success fs-4 me-2"></i>
                                                             {% elseif ext in ['ppt', 'pptx'] %}
-                                                                <i class="bi bi-file-earmark-ppt text-warning fs-4 me-2"></i>
+                                                            <i
+                                                                class="bi bi-file-earmark-ppt text-warning fs-4 me-2"></i>
                                                             {% elseif ext in ['zip', 'rar', '7z'] %}
-                                                                <i class="bi bi-file-earmark-zip text-secondary fs-4 me-2"></i>
+                                                            <i
+                                                                class="bi bi-file-earmark-zip text-secondary fs-4 me-2"></i>
                                                             {% else %}
-                                                                <i class="bi bi-file-earmark text-muted fs-4 me-2"></i>
+                                                            <i class="bi bi-file-earmark text-muted fs-4 me-2"></i>
                                                             {% endif %}
                                                             <span class="fw-semibold text-dark">{{ doc.title }}</span>
                                                         </div>
