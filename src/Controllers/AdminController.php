@@ -113,6 +113,20 @@ class AdminController
     {
         header('Content-Type: application/json');
 
+        // Fetch document to get file path before deleting
+        $doc = $this->sqlite->read('documents', ['id' => $id], 1);
+        if (count($doc) === 0) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'message' => 'Document not found']);
+            return;
+        }
+
+        // Delete file from storage
+        $filePath = __DIR__ . '/../../public_html/share_files/' . ($doc[0]['path'] ?? '');
+        if (is_file($filePath)) {
+            unlink($filePath);
+        }
+
         $result = $this->sqlite->delete('documents', ['id' => $id]);
         if (!$result) {
             http_response_code(500);

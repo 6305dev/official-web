@@ -43,18 +43,22 @@ class UploadController
             return;
         }
 
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        $fileType = mime_content_type($tmpName) ?: ($file['type'] ?? '');
+        // Enforce 5 MB max file size
+        $maxSize = 5 * 1024 * 1024; // 5 MB
+        $fileSize = $file['size'] ?? 0;
 
-        if (!in_array($fileType, $allowedTypes, true)) {
-            http_response_code(415);
-            echo json_encode(['success' => false, 'message' => 'Invalid file type']);
+        if ($fileSize > $maxSize) {
+            http_response_code(413);
+            echo json_encode(['success' => false, 'message' => 'Ukuran file melebihi batas maksimal 5 MB']);
             return;
         }
 
         $originalName = basename($file['name'] ?? 'file');
         $safeName = preg_replace('/[^A-Za-z0-9._-]/', '_', $originalName);
-        $newFileName = uniqid('', true) . '-' . $safeName;
+        $extension = pathinfo($safeName, PATHINFO_EXTENSION);
+        $nameOnly = pathinfo($safeName, PATHINFO_FILENAME);
+        $randomStr = substr(bin2hex(random_bytes(3)), 0, 6);
+        $newFileName = $nameOnly . '_' . $randomStr . ($extension ? '.' . $extension : '');
         $targetFile = $targetDir . $newFileName;
 
         if (!move_uploaded_file($tmpName, $targetFile)) {
