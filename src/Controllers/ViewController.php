@@ -66,7 +66,7 @@ class ViewController
 
         switch ($category) {
             case 'ppid':
-                $subcategory = 'LAPORAN';
+                $subcategory = 'UMUM';
                 $subtitle = 'PPID';
                 $result = $this->sqlite->read('documents', ['category' => $subcategory]);
                 $this->render('document', [
@@ -98,6 +98,39 @@ class ViewController
                 ]);
                 break;
 
+            case 'undang-undang-adminduk':
+                $subcategory = 'UU';
+                $subtitle = 'Undang - Undang Adminduk';
+                $result = $this->sqlite->read('documents', ['category' => $subcategory]);
+                $this->render('document', [
+                    'title' => $subtitle . ' - DISDUKCAPIL TAPIN',
+                    'subtitle' => $subtitle,
+                    'data' => $result
+                ]);
+                break;
+
+            case 'standar-operasional-prosedur':
+                $subcategory = 'SOP';
+                $subtitle = 'Standar Operasional Prosedur';
+                $result = $this->sqlite->read('documents', ['category' => $subcategory]);
+                $this->render('document', [
+                    'title' => $subtitle . ' - DISDUKCAPIL TAPIN',
+                    'subtitle' => $subtitle,
+                    'data' => $result
+                ]);
+                break;
+
+            case 'standar-pelayan':
+                $subcategory = 'SP';
+                $subtitle = 'Standar Pelayanan';
+                $result = $this->sqlite->read('documents', ['category' => $subcategory]);
+                $this->render('document', [
+                    'title' => $subtitle . ' - DISDUKCAPIL TAPIN',
+                    'subtitle' => $subtitle,
+                    'data' => $result
+                ]);
+                break;
+
             default:
                 $this->render('404', [
                     'title' => ' - DISDUKCAPIL TAPIN'
@@ -114,7 +147,7 @@ class ViewController
     public function dashboard(): void
     {
         $data = $this->sqlite->read('articles', [], 10);
-        $documents = $this->sqlite->read('documents', [], 50);
+        $documents = $this->sqlite->read('documents');
         $this->render('dashboard', [
             'title' => 'DASHBOARD - DISDUKCAPIL TAPIN', 
             'data' => $data,
