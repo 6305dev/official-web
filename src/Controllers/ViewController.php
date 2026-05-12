@@ -120,7 +120,7 @@ class ViewController
                 ]);
                 break;
 
-            case 'standar-pelayan':
+            case 'standar-pelayanan':
                 $subcategory = 'SP';
                 $subtitle = 'Standar Pelayanan';
                 $result = $this->sqlite->read('documents', ['category' => $subcategory]);
